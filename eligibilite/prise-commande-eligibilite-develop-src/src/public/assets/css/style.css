@@ -1,0 +1,123 @@
+/* line 2, ../sass/style.scss */
+.app {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+}
+
+/* line 8, ../sass/style.scss */
+input::placeholder {
+  color: #dacbcb !important;
+}
+
+/* line 12, ../sass/style.scss */
+#login {
+  margin-top: 5em;
+}
+
+/* line 16, ../sass/style.scss */
+.bg-violet {
+  background: #9265ce;
+}
+
+/* line 20, ../sass/style.scss */
+.bg-blue {
+  background: #4bb3e6;
+}
+
+/* line 24, ../sass/style.scss */
+*[class^="text-"] {
+  background: none !important;
+}
+
+/* line 29, ../sass/style.scss */
+.order-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 260px;
+  width: 300px;
+  border: none !important;
+  box-shadow: 0 0 1px black;
+}
+
+/* line 40, ../sass/style.scss */
+.myBanner *:not(.container) {
+  padding: 0;
+  margin: 0;
+}
+/* line 45, ../sass/style.scss */
+.myBanner a {
+  padding: 4px 20px !important;
+}
+/* line 49, ../sass/style.scss */
+.myBanner .container {
+  padding: 10px 0;
+}
+
+/* line 55, ../sass/style.scss */
+.stepper-step {
+  height: 50px !important;
+  width: 50px !important;
+}
+
+/* line 60, ../sass/style.scss */
+.divider {
+  background: red;
+  height: 5px !important;
+  width: 100%;
+}
+
+/* line 66, ../sass/style.scss */
+.rond {
+  height: 50px;
+  width: 50px;
+  border-radius: 100%;
+  background: blue;
+}
+
+/* line 73, ../sass/style.scss */
+#showStep {
+  position: relative;
+  display: flex;
+  justify-content: space-evenly;
+}
+/* line 77, ../sass/style.scss */
+#showStep .step-container {
+  z-index: 1;
+}
+/* line 81, ../sass/style.scss */
+#showStep .step {
+  background: gray;
+  color: white;
+  font-size: 25px;
+  border-radius: 100%;
+  height: 80px;
+  width: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* line 93, ../sass/style.scss */
+#showStep .stepLine {
+  position: absolute;
+  top: 33%;
+  height: 4%;
+  background: black;
+  width: 60%;
+}
+
+/* line 103, ../sass/style.scss */
+.modal-footer {
+  all: initial !important;
+}
+
+/*Map */
+/* line 108, ../sass/style.scss */
+#map {
+  height: 300px !important;
+}
+
+/*
+    dropdown navbar
+ */

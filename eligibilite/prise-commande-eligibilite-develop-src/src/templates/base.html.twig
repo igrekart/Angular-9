@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    {% block stylesheets %}
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+              integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+              crossorigin=""/>
+        <link rel="stylesheet" href="{{ asset('assets/fontawesome/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/boosted/css/orangeIcons.css') }}">
+        <link rel="stylesheet" href="{{ asset('assets/boosted/css/boosted.min.css') }}">
+    {% endblock %}
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
+    <title>{% block title %}{% endblock %}</title>
+</head>
+<body>
+    <header>
+        {% include 'partials/navbar.html.twig' %}
+
+        <div class="col-md-10 mx-auto">
+            {% for key, flash in app.flashes %}
+                <div class="alert alert-{{ key }} mt-2 " role="alert">
+                    <span class="alert-icon"><span class="sr-only">Success</span></span>
+                    {% for msg in flash %}
+                        <strong>{{ msg }}</strong>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    </header>
+    {% block body %}{% endblock %}
+    {% block javascripts %}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.min.js"></script>
+        <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+                integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+                crossorigin=""></script>
+        <script src="{{ asset('assets/boosted/js/boosted.min.js') }}"></script>
+    {% endblock %}
+    <script src="{{ asset('assets/js/script.js') }}"></script>
+</body>
+</html>

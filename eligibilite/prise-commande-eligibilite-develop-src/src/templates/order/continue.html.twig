@@ -1,0 +1,33 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}commandes non finalisees{% endblock %}
+
+{% block body %}
+
+    <div class="container">
+        <h1>Commandes non finalisees</h1>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Nom client</th>
+                <th>etape actuelle</th>
+                <th>Derniere modification</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for order in orders %}
+            <tr>
+                <td scope="row">{{ order.customer.lastname }} {{ order.customer.firstname }}</td>
+                <td>Etape {{ order.step }}</td>
+                <td>{{ order.updatedAt | date }}</td>
+                <td>
+                    <a href="" class="btn btn-secondary">Details</a>
+                    <a href="{{ path('process_update', {id: order.id}) }}" class="btn btn-primary">Continuer</a>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,88 @@
+{% extends 'base.html.twig' %}
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{% block body %}
+    {% include "order/_primaryBanner.html.twig" with {"title": "Nouvelle commande"} %}
+    <div class="mx-auto col-md-6">
+    </div>
+    <div class="row my-md-5">
+
+        <div class="mx-auto col-md-8">
+
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            {% include 'order/_stepper_progress.html.twig' with {'step': flow.getCurrentStepNumber()} %}
+            {% if flow.getCurrentStepNumber() == 4 %}
+                <h2>Justificatif du client</h2>
+            {% endif %}
+{#            {% if flow.getCurrentStepNumber() == 1 %}#}
+{#                #}
+{#            {% endif %}#}
+            <div>
+                {{ form_widget(form) }}
+            </div>
+
+            {{ form_rest(form) }}
+
+            {% if flow.getCurrentStepNumber() == 3 %}
+                <div class="form-group">
+                    <select class="js-example-basic-single form-control" name="state">
+                        <option>Localisation</option>
+                      </select>
+                </div>
+                <div class="mx-auto col-md-9 my-5">
+                    <div id="map"></div>
+                </div>
+                
+                <div class="text-center">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eligibilityModal">
+                        verifier
+                    </button>
+                </div>
+
+                <div class="modal fade offset-md-4 col-md-4" id="eligibilityModal" tabindex="-1" role="dialog" aria-labelledby="eligibilityModalTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title" id="eligibilityModalTitle">Verification</h3>
+                            </div>
+                            <div class="modal-body text-center">
+                                <i class="far fa-check-circle bg-white text-success fa-10x"></i>
+                            </div>
+                            <div class="modal-footer text-center">
+                                <div class="mt-3">
+                                    {% include 'themes/buttons_stepper.html.twig' with {
+                                        craue_formflow_button_class_last: 'btn btn-primary',
+                                        craue_formflow_button_class_back: 'btn btn-dark mr-3',
+                                        craue_formflow_button_class_reset: 'btn btn-warning d-none',
+                                        craue_formflow_button_class_next: 'btn btn-primary btn-block',
+                                        craue_formflow_button_label_back: 'Retour',
+                                        craue_formflow_button_label_next: 'Continuer',
+                                    } %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                {% include 'themes/buttons_stepper.html.twig' with {
+                    craue_formflow_button_class_last: 'btn btn-primary',
+                    craue_formflow_button_class_back: 'btn btn-dark mr-3',
+                    craue_formflow_button_class_reset: 'btn btn-warning d-none',
+                    craue_formflow_button_label_back: 'Retour',
+                    craue_formflow_button_label_next: 'Suivant',
+                    craue_formflow_button_label_finish: 'terminer',
+                } %}
+            {% endif %}
+            
+            {{ form_end(form) }}
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block css %}
+    <link type="text/css" rel="stylesheet" href="{{ asset('bundles/craueformflow/css/buttons.css') }}" />
+    {{ parent() }}
+{% endblock %}

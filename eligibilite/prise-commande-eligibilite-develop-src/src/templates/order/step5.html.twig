@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include "order/_primaryBanner.html.twig" with {"title": "Nouvelle commande"} %}
+    {% include"order/_secondaryBanner.html.twig" with {"title": "Commande"} %}
+
+    <div class="d-md-flex justify-content-md-center mt-5">
+        <div class="mr-md-5">
+            <h3 class="h1 mb-md-4">Offre</h3>
+            <div class="form-group">
+                <input type="checkbox" name="" id="">
+                <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="" id="">
+                <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="" id="">
+                <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="" id="">
+                <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+            </div>
+        </div>
+        <div class="ml-md-5">
+            <h3 class="h1 mb-md-4">Options</h3>
+            <div class="form-group">
+                    <input type="checkbox" name="" id="">
+                    <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+                </div>
+            <div class="form-group">
+                <input type="checkbox" name="" id="">
+                <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="" id="">
+                <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+            </div>
+            <div class="form-group">
+                <input type="checkbox" name="" id="">
+                <label for="" class="font-weight-normal h2 ml-md-2">lorem ipsum blabla</label>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="text-center">
+        <div class="mt-md-5">
+            <a href="#" class="btn btn-dark btn-lg mr-3">Annuler</a>
+            <a href="#" class="btn btn-primary btn-lg">Veridier</a>
+        </div>
+
+    </div>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

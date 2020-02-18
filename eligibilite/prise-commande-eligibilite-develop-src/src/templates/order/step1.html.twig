@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <main>
+        <div class="row d-flex justify-content-center mt-5">
+            <a href="{{ path('process') }}">
+                <div class="order-card bg-blue">
+                    <div class="row p-3">
+                        <div class="col-auto">
+                            <i class="fas fa-box fa-3x"></i>
+                        </div>
+                        <div class="col">
+                            <h2>Nouvelle Commande</h2>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <div class="col-md-1"></div>
+            <a href="{{ path('un_process') }}">
+                <div class="order-card bg-violet">
+                    <div class="row p-3">
+                        <div class="col-auto">
+                            <i class="fas fa-box fa-3x"></i>
+                        </div>
+                        <div class="col">
+                            <h2>Commande non finalisee</h2>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </main>
+{% endblock %}
