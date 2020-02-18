@@ -602,13 +602,13 @@ class ApiController extends AbstractController
         }
 
         $justification =  new Justification();
-        $justification->setType($data->type)
-            ->setIdentifier($data->identifier)
-            ->setEmission(new \DateTime(strtotime($data->emission)))
-            ->setExpiration(new \DateTime(strtotime($data->expiration)))
-            ->setCountry($data->country)
-            ->setFile($data->file)
-            ->setCustomer($customer);
+        // $justification->setType($data->type)
+        //     ->setIdentifier($data->identifier)
+        //     ->setEmission(new \DateTime(strtotime($data->emission)))
+        //     ->setExpiration(new \DateTime(strtotime($data->expiration)))
+        //     ->setCountry($data->country)
+        //     ->setFile($data->file)
+        //     ->setCustomer($customer);
 
         try {
             $status = $manager->persist($justification);
