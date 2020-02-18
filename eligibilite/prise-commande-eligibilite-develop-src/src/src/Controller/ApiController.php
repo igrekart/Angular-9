@@ -347,7 +347,7 @@ class ApiController extends AbstractController
 
 
         $location = new Location();
-        $location->setCountry($data->country)
+        $location->setCountry($country)
                  ->setCity($data->city)
                  ->setTown($data->town)
                  ->setDistrict($data->district)
