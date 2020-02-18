@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FileUploader
-{
+{ 
     private $targetDirectory;
 
     public function __construct($targetDirectory)

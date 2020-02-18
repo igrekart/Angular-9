@@ -2,23 +2,28 @@
 
 namespace App\Controller;
 
-use App\Entity\Civility;
-use App\Entity\Country;
+use App\Entity\Authority;
 use App\Entity\User;
+use App\Entity\Image;
+use App\Entity\Country;
+use App\Entity\Civility;
 use App\Entity\Customer;
-use App\Entity\Justification;
+use App\Entity\Identity;
 use App\Entity\Location;
+use App\Entity\Justification;
+use App\Service\FileUploader;
 use Doctrine\ORM\ORMException;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpClient\Exception\JsonException;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class ApiController extends AbstractController
 {
@@ -181,7 +186,7 @@ class ApiController extends AbstractController
 
         $civilityId = $data->civilityId;
         $civility = $this->getDoctrine()->getRepository(Civility::class)->findOneBy(["id" => $civilityId]);
-        
+
         if (!$civility) {
             return $this->json(
                 [
@@ -195,17 +200,17 @@ class ApiController extends AbstractController
                 ]
             );
         }
-        
-        
+
+
 
         $customer = new Customer();
         $customer->setFirstname($data->firstname)
-                 ->setLastname($data->lastname)
-                 ->setBirth(new \DateTime(strtotime($data->birth)))
-                 ->setBirthPlace($data->birthPlace)
-                 ->setNationality($data->nationality)
-                 ->setCivility($civility)
-                 ->setUser($user);
+            ->setLastname($data->lastname)
+            ->setBirth(new \DateTime(strtotime($data->birth)))
+            ->setBirthPlace($data->birthPlace)
+            ->setNationality($data->nationality)
+            ->setCivility($civility)
+            ->setUser($user);
 
         $errors = $validator->validate($customer);
 
@@ -329,7 +334,7 @@ class ApiController extends AbstractController
         }
 
         $countryId = $data->countryId;
-        $country = $this->getDoctrine()->getRepository(Country::class)->findOneBy(['id'=>$countryId]);
+        $country = $this->getDoctrine()->getRepository(Country::class)->findOneBy(['id' => $countryId]);
 
         if (!$country) {
             return $this->json(
@@ -348,11 +353,11 @@ class ApiController extends AbstractController
 
         $location = new Location();
         $location->setCountry($country)
-                 ->setCity($data->city)
-                 ->setTown($data->town)
-                 ->setDistrict($data->district)
-                 ->setAddition($data->addition)
-                 ->setCustomer($customer);
+            ->setCity($data->city)
+            ->setTown($data->town)
+            ->setDistrict($data->district)
+            ->setAddition($data->addition)
+            ->setCustomer($customer);
 
         $errors = $validator->validate($location);
 
@@ -490,8 +495,8 @@ class ApiController extends AbstractController
         }
 
         $location->setLatitude($data->latitude)
-                 ->setLongitude($data->longitude)
-                 ->setEligible($data->eligible);
+            ->setLongitude($data->longitude)
+            ->setEligible($data->eligible);
 
         $errors = $validator->validate($location);
 
@@ -601,17 +606,90 @@ class ApiController extends AbstractController
             );
         }
 
+        $identityId = $data->identityId;
+
+        $identity = $this->getDoctrine()->getRepository(Identity::class)->findOneBy(["id" => $identityId]);
+
+        if (!$identity) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "Identity not exist"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $authorityId = $data->authorityId;
+
+        $authority = $this->getDoctrine()->getRepository(Identity::class)->findOneBy(["id" => $authorityId]);
+
+        if (!$authority) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "authority not exist"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $authorityId = $data->authorityId;
+
+        $authority = $this->getDoctrine()->getRepository(Authority::class)->findOneBy(["id" => $authorityId]);
+
+        if (!$authority) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "authority not exist"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $deliveryCountryId = $data->deliveryCountryId;
+
+        $country = $this->getDoctrine()->getRepository(Country::class)->findOneBy(["id" => $deliveryCountryId]);
+
+        if (!$country) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "Delivery country not exist"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+
         $justification =  new Justification();
-        // $justification->setType($data->type)
-        //     ->setIdentifier($data->identifier)
-        //     ->setEmission(new \DateTime(strtotime($data->emission)))
-        //     ->setExpiration(new \DateTime(strtotime($data->expiration)))
-        //     ->setCountry($data->country)
-        //     ->setFile($data->file)
-        //     ->setCustomer($customer);
+        $justification->setDeliveryCountry($country)
+            ->setIdentity($identity)
+            ->setAuthority($authority)
+            ->setIdentifier($data->identifier)
+            ->setEmission(new \DateTime(strtotime($data->emission)))
+            ->setExpiration(new \DateTime(strtotime($data->expiration)))
+            ->setCustomer($customer);
 
         try {
-            $status = $manager->persist($justification);
+            $manager->persist($justification);
             $manager->flush();
         } catch (ORMException $error) {
             $response = [
@@ -637,6 +715,91 @@ class ApiController extends AbstractController
             "item" => [
                 "justificationId" => $justification->getId()
             ]
+        ];
+        return $this->json($response);
+    }
+
+    /**
+     * @Route("/api/image", name="image")
+     */
+    public function image(Request $request, ValidatorInterface $validator, EntityManagerInterface $manager, FileUploader $fileUploader)
+    {
+        if ($request->getMethod() != 'POST') {
+            return $this->json([
+                'status' => Response::HTTP_METHOD_NOT_ALLOWED,
+                'message' => 'Méthode non autorisée'
+            ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        // try {
+        //     $data = json_decode($request->getContent());
+        // } catch (JsonException $exception) {
+        //     return $this->json(
+        //         [
+        //             "hasError" => true,
+        //             "count" => 0,
+        //             'status' => [
+        //                 "code" => "500",
+        //                 "message" => "wrong syntaxe"
+        //             ],
+        //             "item" => []
+        //         ]
+        //     );
+        // }
+
+        $justificationId = $request->get('justificationId');
+
+        $justification = $this->getDoctrine()->getRepository(Justification::class)->findOneBy(["id" => $justificationId]);
+
+        if (!$justification) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "Delivery country not exist"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $images = $request->files->get('image');
+        dd($images);
+        foreach ($images as $image) {
+            
+            try {
+                $imageToSave = new Image();
+                $filename = $fileUploader->upload($image);
+    
+                $imageToSave->setFilename($filename)
+                           ->setJustification($justification);
+                $manager->persist($imageToSave);
+                $manager->flush();
+            } catch (ORMException $error) {
+                $response = [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "800",
+                        "message" => "erreur des images en base de donnée"
+                    ],
+                    "item" => []
+                ];
+                return $this->json($response);
+            }
+        }
+
+
+        $response = [
+            "hasError" => false,
+            "count" => 0,
+            'status' => [
+                "code" => "200",
+                "message" => "customer justification created"
+            ],
+            "item" => []
         ];
         return $this->json($response);
     }

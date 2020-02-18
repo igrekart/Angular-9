@@ -271,13 +271,13 @@ class OrderController extends AbstractController
                 if ($flow->getCurrentStepNumber() == 4) {
                     $filenames = [];
                     $images = $request->files->get('justification')['file'];
-
+ 
                     foreach ($images as $image) {
                         $imageToSave = new Image();
                         $filename = $fileUploader->upload($image);
 
                         $imageToSave->setFilename($filename)
-                            ->setJustification($toSave);
+                               ->setJustification($toSave);
                         $manager->persist($imageToSave);
                         $filenames[]= $filename;
 
