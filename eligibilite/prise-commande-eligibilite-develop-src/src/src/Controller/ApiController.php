@@ -2,17 +2,23 @@
 
 namespace App\Controller;
 
-use App\Entity\Authority;
 use App\Entity\User;
 use App\Entity\Image;
+use App\Entity\Offer;
+use App\Entity\OOrder;
+use App\Entity\Option;
 use App\Entity\Country;
+use App\Entity\Payment;
 use App\Entity\Civility;
 use App\Entity\Customer;
 use App\Entity\Identity;
 use App\Entity\Location;
+use App\Entity\Authority;
 use App\Entity\Justification;
+use App\Entity\PaymentChoice;
 use App\Service\FileUploader;
 use Doctrine\ORM\ORMException;
+use App\Repository\OrderRepository;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -765,29 +771,33 @@ class ApiController extends AbstractController
             );
         }
 
-        $images = $request->files->get('image');
-        dd($images);
+        $images[] = !is_null($request->files->get('recto')) ? $request->files->get('recto') : "";
+        $images[] = !is_null($request->files->get('verso')) ? $request->files->get('verso') : "";
+
         foreach ($images as $image) {
-            
-            try {
-                $imageToSave = new Image();
-                $filename = $fileUploader->upload($image);
-    
-                $imageToSave->setFilename($filename)
-                           ->setJustification($justification);
-                $manager->persist($imageToSave);
-                $manager->flush();
-            } catch (ORMException $error) {
-                $response = [
-                    "hasError" => true,
-                    "count" => 0,
-                    'status' => [
-                        "code" => "800",
-                        "message" => "erreur des images en base de donnée"
-                    ],
-                    "item" => []
-                ];
-                return $this->json($response);
+
+            if (gettype($image) == "object") {
+
+                try {
+                    $imageToSave = new Image();
+                    $filename = $fileUploader->upload($image);
+
+                    $imageToSave->setFilename($filename)
+                        ->setJustification($justification);
+                    $manager->persist($imageToSave);
+                    $manager->flush();
+                } catch (ORMException $error) {
+                    $response = [
+                        "hasError" => true,
+                        "count" => 0,
+                        'status' => [
+                            "code" => "800",
+                            "message" => "erreur des images en base de donnée"
+                        ],
+                        "item" => []
+                    ];
+                    return $this->json($response);
+                }
             }
         }
 
@@ -797,10 +807,222 @@ class ApiController extends AbstractController
             "count" => 0,
             'status' => [
                 "code" => "200",
-                "message" => "customer justification created"
+                "message" => "image is upload"
             ],
             "item" => []
         ];
         return $this->json($response);
     }
+
+
+    /**
+     * @Route("/api/choicePack", name="package")
+     */
+    public function option(Request $request, ValidatorInterface $validator, EntityManagerInterface $manager)
+    {
+        if ($request->getMethod() != 'POST') {
+            return $this->json([
+                'status' => Response::HTTP_METHOD_NOT_ALLOWED,
+                'message' => 'Méthode non autorisée'
+            ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        try {
+            $data = json_decode($request->getContent());
+        } catch (JsonException $exception) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "500",
+                        "message" => "wrong syntaxe"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $customerId = $data->customerId;
+
+        $customer = $this->getDoctrine()->getRepository(Customer::class)->findOneBy(["id" => $customerId]);
+
+        if (!$customer) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "Customer not exist"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $offerData = $data->offer;
+        $optionsData = $data->options;
+        
+        $offer = $this->getDoctrine()->getRepository(Offer::class)->find($offerData);
+        $orderRepository = $this->getDoctrine()->getRepository(OOrder::class);
+        $totalAmount = $offer->getAmount();
+        $store = new OOrder();
+        $order = $this->updateStepOrder($store->getId(), $orderRepository);
+        //dd($store);
+
+
+        foreach ($optionsData as $option) {
+            $opt = $this->getDoctrine()->getRepository(Option::class)->find($option);
+            $totalAmount+= $opt->getPrice();
+            //$order->addOptionsChoosen($opt);
+        }
+
+        $order
+            ->setOffer($offer)
+            ->setCustomer($customer)
+            ->setReference(500)
+            ->setAmount($totalAmount);
+
+        $manager->persist($order);
+
+        $response = [
+            "hasError" => false,
+            "count" => 0,
+            'status' => [
+                "code" => "200",
+                "message" => "your package"
+            ],
+            "item" => []
+        ];
+        return $this->json($response);
+    }
+
+    private function updateStepOrder($store, OrderRepository $orderRepository) {
+        if (isset($store)) {
+            $order = $orderRepository->find($store);
+            return $order;
+        }
+    }
+
+
+    /**
+     * @Route("/api/payment", name="payment")
+     */
+    public function payment(Request $request, ValidatorInterface $validator, EntityManagerInterface $manager)
+    {
+        if ($request->getMethod() != 'POST') {
+            return $this->json([
+                'status' => Response::HTTP_METHOD_NOT_ALLOWED,
+                'message' => 'Méthode non autorisée'
+            ], Response::HTTP_METHOD_NOT_ALLOWED);
+        }
+
+        try {
+            $data = json_decode($request->getContent());
+        } catch (JsonException $exception) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "500",
+                        "message" => "wrong syntaxe"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $userId = $data->userId;
+
+        $user = $this->getDoctrine()->getRepository(User::class)->findOneBy(["id" => $userId]);
+
+
+        if (!$user) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "authenfication fail"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        $paymentChoiceId = $data->paymentChoiceId;
+
+        $paymentChoice = $this->getDoctrine()->getRepository(PaymentChoice::class)->findOneBy(["id" => $paymentChoiceId]);
+
+        if (!$paymentChoice) {
+            return $this->json(
+                [
+                    "hasError" => true,
+                    "count" => 0,
+                    'status' => [
+                        "code" => "404",
+                        "message" => "Payment not exist"
+                    ],
+                    "item" => []
+                ]
+            );
+        }
+
+        // $orderId = $data->orderId;
+
+        // $order = $this->getDoctrine()->getRepository(OOrder::class)->findOneBy(["id" => $orderId]);
+
+        // if (!$order) {
+        //     return $this->json(
+        //         [
+        //             "hasError" => true,
+        //             "count" => 0,
+        //             'status' => [
+        //                 "code" => "404",
+        //                 "message" => "Order not exist"
+        //             ],
+        //             "item" => []
+        //         ]
+        //     );
+        // }
+
+        $payment = new Payment();
+        $payment->setCreatedAt(new \DateTime())
+                ->setLabel($data->label)
+                ->setOrderId(new OOrder)
+                ->setPaymentChoice($paymentChoice)
+                ->setStatus($data->status)
+                ->setAmount($data->amount);
+
+        try {
+            $manager->persist($payment);
+            $manager->flush();
+        } catch (ORMException $error) {
+            $response = [
+                "hasError" => true,
+                "count" => 0,
+                'status' => [
+                    "code" => "800",
+                    "message" => "erreur d'enregistrement en base"
+                ],
+                "item" => []
+            ];
+            return $this->json($response);
+        }
+
+        $response = [
+            "hasError" => false,
+            "count" => 0,
+            'status' => [
+                "code" => "200",
+                "message" => "your package"
+            ],
+            "item" => []
+        ];
+        return $this->json($response);
+    }
+
 }
