@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CustomerRepository")
@@ -15,51 +16,61 @@ class Customer
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     *  @Groups ("Customer::setting")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="date")
+     *  @Groups ("Customer::setting")
      */
     private $birth;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $birthPlace;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $nationality;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Location", mappedBy="customer")
+     *  @Groups ("Customer::setting")
      */
     private $locations;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Interest", mappedBy="customer")
+     *  @Groups ("Customer::setting")
      */
     private $interest;
 
     /**
      * @ORM\OneToMany(targetEntity="OOrder", mappedBy="customer")
+     *  @Groups ("Customer::setting")
      */
     private $orders;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Justification", mappedBy="customer")
+     *  @Groups ("Customer::setting")
      */
     private $justification;
 

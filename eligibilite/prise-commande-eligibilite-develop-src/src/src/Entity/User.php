@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -16,51 +17,61 @@ class User implements UserInterface
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups ("Customer::setting")
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $login;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $lastname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $firstname;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $mail;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $phone;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Customer", mappedBy="user")
+     *  @Groups ("Customer::setting")
      */
     private $customers;
 
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\UserRole", inversedBy="users")
+     *  @Groups ("Customer::setting")
      */
     private $userRoles;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Civility", inversedBy="users")
+     *  @Groups ("Customer::setting")
      */
     private $civility;
 
     /**
      * @ORM\Column(type="string", length=255)
+     *  @Groups ("Customer::setting")
      */
     private $password;
 
