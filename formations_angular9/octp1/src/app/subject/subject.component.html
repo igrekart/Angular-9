@@ -1,0 +1,16 @@
+<div class="row mt-4 mb-2">
+    <div class="col-lg-12">
+        <button routerLink="" class="btn btn-primary">retour au menu principal</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="card mb-3">
+            <div class="card-body">
+                <h5 class="card-title" *ngIf="user">{{user.name}} {{user.username}}</h5>
+                <p class="card-text" *ngIf="user">Email : {{user.email}}</p>
+                <app-map *ngIf="user" [long]="user.address.geo.lng" [lat]="user.address.geo.lat"></app-map>
+            </div>
+        </div>
+    </div>
+</div>
