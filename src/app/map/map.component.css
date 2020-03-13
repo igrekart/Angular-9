@@ -1,0 +1,9 @@
+.map-zone {
+    height: 400px;
+}
+
+#map {
+    position: relative;
+    height: 100%;
+    width: 100%;
+}

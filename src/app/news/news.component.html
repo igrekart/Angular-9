@@ -1,0 +1,18 @@
+<div class="row mt-4">
+    <div class="col-lg-12">
+        <div class="card text-left" *ngFor="let user of users | paginate: { itemsPerPage: 3, currentPage: p }">
+            <img class="card-img-top" src="holder.js/100px180/" alt="">
+            <div class="card-body">
+                <h4 class="card-title">{{user.username}} {{user.name}}</h4>
+                <p class="card-text">
+                    <a [routerLink]="['news',user.id]"> +plus de detail</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-lg-12 mt-2">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+</div>
