@@ -15,15 +15,10 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
 
-    if(this.authService.checker({'login':'youssoufou','password':'1234567890'})){
-      console.log("connect")
-      return true;
-  
+    if(this.authService.checker({'login':'youssoufo','password':'1234567890'}) || this.authService.getCheckByAuth()){
+      return true
     }else {
-  
-      console.log('ne rentre pas')
-      this.router.navigate['/auth'];
-  
+      this.router.navigate(['/auth']);
     }
   }
   

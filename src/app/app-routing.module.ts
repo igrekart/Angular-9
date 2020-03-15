@@ -11,9 +11,8 @@ const routes: Routes = [
   { path: "", canActivate: [AuthGuard], component: NewsComponent },
   { path: "auth", component: AuthComponent},
   { path: "news/:subject", canActivate: [AuthGuard], component: SubjectComponent },
-
-  { path: "**", redirectTo: 'erreur-404'},
-  { path: "erreur-404", component: FourOhForComponent }
+  { path: "erreur-404", component: FourOhForComponent },
+  { path: "**", component: FourOhForComponent}
 ];
 
 @NgModule({

@@ -6,20 +6,21 @@ import { state } from '@angular/animations';
 })
 export class AuthService {
 
-  state:boolean = false;
+  private state:boolean = false;
 
-userValid = [
-  {
-    "id": 1,
-    "login":"youssoufou",
-    "password" : "1234567890"
-  },
-  {
-    "id": 1,
-    "login":"mohamed",
-    "password" : "1234567890"
-  }
-]
+
+  userValid = [
+    {
+      "id": 1,
+      "login":"youssoufou",
+      "password" : "1234567890"
+    },
+    {
+      "id": 1,
+      "login":"mohamed",
+      "password" : "1234567890"
+    }
+  ]
 
 constructor() {  }
 
@@ -34,4 +35,18 @@ constructor() {  }
    return this.state;
  }
 
+ checkByAuth({login, password}):void
+  {
+    this.userValid.forEach(user => {
+      console.log('checkByAuth : '+ login, password)
+      if(user.login == login && user.password == password){
+        this.state = true;
+      }
+    });
+  }
+
+  getCheckByAuth(): boolean{
+    console.log('getCheckAuth : '+ this.state)
+    return this.state
+  }
 }
